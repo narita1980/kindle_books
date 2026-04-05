@@ -1,0 +1,6 @@
+.DS_Store
+kindle_screenshots/
+__pycache__/
+*.pyc
+.venv/
+venv/
