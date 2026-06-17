@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Claude Code のローカル設定・一時ワークツリーは追跡しない（コマンド定義は追跡する）
+.claude/settings.local.json
+.claude/worktrees/
