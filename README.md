@@ -42,7 +42,7 @@ python3 -m pip install --user --break-system-packages pyautogui Pillow
    - 現在画面のスクリーンショットを保存
    - **左矢印**キーで 1 ページ送り
    - 指定秒だけ待機（ページの描画待ち）
-6. 指定ページ数に達するか、途中でターミナルから `Ctrl+C` で止められます（止めた時点までの画像は残ります）。
+6. 指定ページ数に達するか、途中でターミナルから `Ctrl+C` で止められます（止めた時点までの画像は残り、続きから撮るための `--session-dir` / `--start-index` の例が表示されます）。
 
 ## 保存されるファイルの場所
 
@@ -107,6 +107,20 @@ python capture_kindle.py --key right --app "Amazon Kindle" --owner "Kindle" \
   --session-dir kindle_screenshots/2026-06-17_21-19-03 \
   --start-index 219 --pages 80 --stop-repeat 3
 ```
+
+## PDF にまとめる
+
+撮影したセッションフォルダの PNG を、`make_pdf.py` で 1 冊の PDF にまとめられます（macOS 標準の Quartz を使うため追加インストール不要）。
+
+```bash
+# kindle_screenshots/2026-06-17_21-19-03.pdf が作られる
+python make_pdf.py kindle_screenshots/2026-06-17_21-19-03
+
+# 出力先を指定する場合
+python make_pdf.py kindle_screenshots/2026-06-17_21-19-03 -o ~/Desktop/本.pdf
+```
+
+ページは連番ファイル名（`001.png`, `002.png`, …）の順に並びます。
 
 ## スラッシュコマンド（Claude Code）
 

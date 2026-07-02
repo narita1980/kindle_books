@@ -53,6 +53,9 @@ def capture_window(window_id, file_path):
     最前面でなくても・別モニターでも撮影できる。"""
     subprocess.run(["screencapture", f"-l{window_id}", "-o", "-x", file_path],
                    check=False, capture_output=True, timeout=20)
+    if not os.path.exists(file_path):
+        raise RuntimeError(
+            f"ウインドウ撮影に失敗しました（画面収録の権限を確認してください）: {file_path}")
 
 
 def images_equal(path_a, path_b):
@@ -85,6 +88,19 @@ def capture_kindle(page_count=PAGE_COUNT, interval=INTERVAL, save_dir=SAVE_DIR,
     print(f"{start_delay}秒後に開始します。Kindleアプリを最前面に表示し、最初のページを開いてください。")
     time.sleep(start_delay)
 
+    try:
+        _capture_loop(page_count, interval, turn_key, app, owner, activate_settle,
+                      session_dir, start_index, stop_repeat)
+    except KeyboardInterrupt:
+        existing = sorted(f for f in os.listdir(session_dir) if f.endswith(".png"))
+        print(f"\n中断しました。{len(existing)}枚を保存済み: {session_dir}")
+        if existing:
+            next_index = int(os.path.splitext(existing[-1])[0]) + 1
+            print(f"続きから撮るには: --session-dir {session_dir} --start-index {next_index}")
+
+
+def _capture_loop(page_count, interval, turn_key, app, owner, activate_settle,
+                  session_dir, start_index, stop_repeat):
     prev_path = None     # 直近の「実ページ」（重複でない最後の画像）
     dup_run = 0          # 連続重複カウント
     dup_paths = []       # 末尾で削除する重複ファイル
